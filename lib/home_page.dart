@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           .read<AudioPlayerCubit>()
                                           .downloadAudio(context);
                                     },
-                                    icon: Icon(Icons.download),
+                                    icon: const Icon(Icons.download),
                                   ),
                           ),
                     const SizedBox(
