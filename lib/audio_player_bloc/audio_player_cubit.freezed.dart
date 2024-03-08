@@ -26,7 +26,7 @@ mixin _$AudioPlayerState {
   bool get audioExists => throw _privateConstructorUsedError;
   bool get downloading => throw _privateConstructorUsedError;
   double get playBackRate => throw _privateConstructorUsedError;
-  double get progress => throw _privateConstructorUsedError;
+  double? get progress => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AudioPlayerStateCopyWith<AudioPlayerState> get copyWith =>
@@ -49,7 +49,7 @@ abstract class $AudioPlayerStateCopyWith<$Res> {
       bool audioExists,
       bool downloading,
       double playBackRate,
-      double progress});
+      double? progress});
 }
 
 /// @nodoc
@@ -74,7 +74,7 @@ class _$AudioPlayerStateCopyWithImpl<$Res, $Val extends AudioPlayerState>
     Object? audioExists = null,
     Object? downloading = null,
     Object? playBackRate = null,
-    Object? progress = null,
+    Object? progress = freezed,
   }) {
     return _then(_value.copyWith(
       animationController: freezed == animationController
@@ -113,10 +113,10 @@ class _$AudioPlayerStateCopyWithImpl<$Res, $Val extends AudioPlayerState>
           ? _value.playBackRate
           : playBackRate // ignore: cast_nullable_to_non_nullable
               as double,
-      progress: null == progress
+      progress: freezed == progress
           ? _value.progress
           : progress // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
     ) as $Val);
   }
 }
@@ -139,7 +139,7 @@ abstract class _$$AudioPlayerStateImplCopyWith<$Res>
       bool audioExists,
       bool downloading,
       double playBackRate,
-      double progress});
+      double? progress});
 }
 
 /// @nodoc
@@ -162,7 +162,7 @@ class __$$AudioPlayerStateImplCopyWithImpl<$Res>
     Object? audioExists = null,
     Object? downloading = null,
     Object? playBackRate = null,
-    Object? progress = null,
+    Object? progress = freezed,
   }) {
     return _then(_$AudioPlayerStateImpl(
       animationController: freezed == animationController
@@ -201,10 +201,10 @@ class __$$AudioPlayerStateImplCopyWithImpl<$Res>
           ? _value.playBackRate
           : playBackRate // ignore: cast_nullable_to_non_nullable
               as double,
-      progress: null == progress
+      progress: freezed == progress
           ? _value.progress
           : progress // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
     ));
   }
 }
@@ -251,7 +251,7 @@ class _$AudioPlayerStateImpl implements _AudioPlayerState {
   final double playBackRate;
   @override
   @JsonKey()
-  final double progress;
+  final double? progress;
 
   @override
   String toString() {
@@ -317,7 +317,7 @@ abstract class _AudioPlayerState implements AudioPlayerState {
       final bool audioExists,
       final bool downloading,
       final double playBackRate,
-      final double progress}) = _$AudioPlayerStateImpl;
+      final double? progress}) = _$AudioPlayerStateImpl;
 
   @override
   AnimationController? get animationController;
@@ -338,7 +338,7 @@ abstract class _AudioPlayerState implements AudioPlayerState {
   @override
   double get playBackRate;
   @override
-  double get progress;
+  double? get progress;
   @override
   @JsonKey(ignore: true)
   _$$AudioPlayerStateImplCopyWith<_$AudioPlayerStateImpl> get copyWith =>

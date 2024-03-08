@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:audio_player_app/download_audio.dart';
-import 'package:audio_player_app/widgets/downloading_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +13,12 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
   AudioPlayerCubit() : super(AudioPlayerState.initial());
   StreamSubscription? _durationSubscription;
   StreamSubscription? _positionSubscription;
+  StreamSubscription? _completeSubscription;
+
   File file = File("/storage/emulated/0/Download/better-day-186374.mp3");
 
-  init(BuildContext context,AnimationController animationController) async {
-    emit(state.copyWith(animationController: animationController));
-
-    if(await file.exists()){
+  init(BuildContext context) async {
+    if (await file.exists()) {
       emit(state.copyWith(audioExists: true));
     }
 
@@ -32,33 +31,27 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
         state.audioPlayer!.onPositionChanged.listen((Duration duration) {
       emit(state.copyWith(duration: duration));
     });
+
+    _completeSubscription = state.audioPlayer!.onPlayerComplete.listen((event) {
+      emit(state.copyWith(duration: const Duration(), isPlaying: false));
+    });
   }
 
   reset() {
     _positionSubscription?.cancel();
     _durationSubscription?.cancel();
+    _completeSubscription?.cancel();
   }
 
   playAudio() async {
     if (!state.isPlaying) {
       if (await file.exists()) {
-        // emit(state.copyWith(audioExists: true));
         state.audioPlayer!.play(DeviceFileSource(file.path));
       } else {
         print("not exist");
-        //  await downloadAudio(context);
-        // if(await file.exists()){
-        //   state.audioPlayer!.play(DeviceFileSource(file.path));
-        // }
       }
-      // AssetSource("audios/audio_sample.mp3")
     } else {
       state.audioPlayer!.pause();
-    }
-    if (state.isPlaying) {
-      state.animationController!.reverse();
-    } else {
-      state.animationController!.forward();
     }
     emit(state.copyWith(isPlaying: !state.isPlaying));
   }
@@ -73,30 +66,16 @@ class AudioPlayerCubit extends Cubit<AudioPlayerState> {
     emit(state.copyWith(playBackRate: rate));
   }
 
-  stopAudio() {
-    if (state.isPlaying) {
-      state.audioPlayer!.stop();
-      emit(state.copyWith(isPlaying: true, duration: const Duration()));
-      state.animationController!.reverse();
-    }
-  }
+  onPlayerComplete() {}
 
-  Future<void> downloadDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (_) {
-        return const DownloadingDialog();
-      },
-    );
-  }
-
-  Future<void> downloadAudio(BuildContext context) async{
-     FileDownload().startDownloading(context, (recivedBytes, totalBytes)  {
-      emit(state.copyWith(downloading: true,progress: recivedBytes/totalBytes)); 
-      if(recivedBytes == totalBytes){
-        emit(state.copyWith(downloading: false,audioExists: true));
+  Future<void> downloadAudio(BuildContext context) async {
+    emit(state.copyWith(progress: null, downloading: true));
+    FileDownload().startDownloading(context, (recivedBytes, totalBytes) {
+      emit(state.copyWith(
+          downloading: true, progress: recivedBytes / totalBytes));
+      if (recivedBytes == totalBytes) {
+        emit(state.copyWith(downloading: false, audioExists: true));
       }
-      });
-      
+    });
   }
 }

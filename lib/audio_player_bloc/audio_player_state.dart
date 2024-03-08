@@ -13,7 +13,7 @@ class AudioPlayerState with _$AudioPlayerState {
   @Default(false)bool audioExists,
   @Default(false)bool downloading,
   @Default(1.0)double playBackRate,
-  @Default(0.0)double progress,
+  @Default(0.0)double? progress,
   }) = _AudioPlayerState;
 
 

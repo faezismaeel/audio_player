@@ -1,5 +1,5 @@
 import 'package:audio_player_app/audio_player_bloc/audio_player_cubit.dart';
-import 'package:audio_player_app/home_page.dart';
+import 'package:audio_player_app/new_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: BlocProvider(
         create: (context) => AudioPlayerCubit(),
-        child: HomePage(),
+        child: NewHomePage(),
       ),
     );
   }
